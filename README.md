@@ -58,4 +58,4 @@ Em cada serviço, a lógica fica em `src/modules/<contexto>/` com camadas **doma
 
 ## CI
 
-Build dos três apps: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): `yarn build` nos três serviços e testes e2e de `/health` no `order-service`.

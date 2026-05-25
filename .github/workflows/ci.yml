@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - order-service
+          - inventory-service
+          - payment-service
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.service }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: ${{ matrix.service }}/yarn.lock
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+  test-order-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: order-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: order-service/yarn.lock
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: E2E (health)
+        run: yarn test:e2e
